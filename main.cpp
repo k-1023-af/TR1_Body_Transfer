@@ -13,10 +13,6 @@
 
 GameScene* gameScene = new GameScene();
 
-//Player* player = new Player();
-
-//Controller* control = new Controller();
-
 const char kWindowTitle[] = "LE2C_21_ファルコン_エブラハム";
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -26,9 +22,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	Novice::Initialize(kWindowTitle, 1280, 720);
 
 	gameScene->Initialize();
-
-	//player->Initialize();
-	//control->Initialize();
 
 	// キー入力結果を受け取る箱
 	char keys[256] = { 0 };
@@ -55,9 +48,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 		//ImGui::ShowDemoWindow();
 
-	//player->Update(keys);
-	//control->Update(keys, preKeys);
-
 		//imguiManager->End();
 #endif
 ///
@@ -79,12 +69,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 /// ImGuiの描画
 //imguiManager->Draw();
 
-		//player->Draw(keys);
-		//control->Draw(keys);
-
-		//scene->DrawDiceNet();
-
-		//scene->DrawPipsOnFace();
 
 		//dxCommon->PostDraw();
 		///
@@ -102,17 +86,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	delete gameScene;
 
-	//delete player;
-
-	//delete control;
-
 	gameScene = nullptr;
-
-	//player = nullptr;
-
-	//control = nullptr;
-
-
 
 	// ライブラリの終了
 	Novice::Finalize();

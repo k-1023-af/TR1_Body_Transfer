@@ -3,6 +3,7 @@
 #include "Player.h"
 #include "Controller.h"
 #include "Novice.h"
+#include "Entity.h"
 
 class GameScene {
 public:

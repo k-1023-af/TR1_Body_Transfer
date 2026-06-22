@@ -4,10 +4,8 @@ Player::Player(){}
 
 Player::~Player(){}
 
-void Player::Initialize(){
-	srt.scale_ = { 1.0f, 1.0f, 0.0f };
-	srt.rotate_ = {0.0f, 0.0f, 0.0f };
-	srt.translate_ = { 100.0f, 100.0f, 0.0f };
+void Player::Initialize(Vector3 startPos){
+	transform_.translate_ = startPos;
 
 	velocity_ = { 0.0f, 0.0f};
 
@@ -15,59 +13,31 @@ void Player::Initialize(){
 	jumpHeight_ = 12.0f;
 }
 
-void Player::Update(char* keys/*, char* preKeys*/){
+void Player::Update(char* keys){
 	velocity_ = { 0.0f, 0.0f };
 
-	if (keys[DIK_W]) {
-		velocity_.y++;
-	}
-	if (keys[DIK_S]) {
-		velocity_.y--;
-	}
-	if (keys[DIK_A]) {
-		velocity_.x--;
-	}
-	if (keys[DIK_D]) {
-		velocity_.x++;
-	}
+	if (keys[DIK_W]) {velocity_.y += 1.0f;}
+	if (keys[DIK_S]) {velocity_.y -= 1.0f;}
+	if (keys[DIK_A]) {velocity_.x -= 1.0f;}
+	if (keys[DIK_D]) {velocity_.x += 1.0f;}
 
 	float length = sqrtf(powf(velocity_.x, 2) + powf(velocity_.y, 2));
 	if (length != 0) {
 		velocity_.x = velocity_.x / length;
 		velocity_.y = velocity_.y / length;
 
-		srt.translate_.x += velocity_.x;
-		srt.translate_.y += velocity_.y;
+		transform_.translate_.x += velocity_.x;
+		transform_.translate_.y += velocity_.y;
 	}
+
+	screenPos_.x = transform_.translate_.x;
+	screenPos_.y = 720 - transform_.translate_.y;
 }
 
-void Player::Draw(char* keys/*, char* preKeys*/){
-	Novice::DrawBox(40, 30, 20, 20, 0, WHITE, kFillModeWireFrame);
-	Novice::ScreenPrintf(48, 30, "W");
-	Novice::DrawBox(10, 60, 20, 20, 0, WHITE, kFillModeWireFrame);
-	Novice::ScreenPrintf(18, 60, "A");
-	Novice::DrawBox(40, 60, 20, 20, 0, WHITE, kFillModeWireFrame);
-	Novice::ScreenPrintf(48, 60, "S");
-	Novice::DrawBox(70, 60, 20, 20, 0, WHITE, kFillModeWireFrame);
-	Novice::ScreenPrintf(78, 60, "D");
-	Novice::DrawBox(10, 90, 80, 20, 0, WHITE, kFillModeWireFrame);
-	Novice::ScreenPrintf(28, 90, "SPACE");
+void Player::Draw(char* keys){
+	DrawControls(keys);
 
-	if (keys[DIK_W]) {
-		Novice::DrawBox(40, 30, 20, 20, 0, WHITE, kFillModeSolid);
-	}
-	if (keys[DIK_A]) {
-		Novice::DrawBox(10, 60, 20, 20, 0, WHITE, kFillModeSolid);
-	}
-	if (keys[DIK_S]) {
-		Novice::DrawBox(40, 60, 20, 20, 0, WHITE, kFillModeSolid);
-	}
-	if (keys[DIK_D]) {
-		Novice::DrawBox(70, 60, 20, 20, 0, WHITE, kFillModeSolid);
-	}
-	if (keys[DIK_SPACE]) {
-		Novice::DrawBox(10, 90, 80, 20, 0, WHITE, kFillModeSolid);
-	}
+	Novice::DrawBox((int)screenPos_.x, (int)screenPos_.y, 20, 20, 0, WHITE, kFillModeSolid);
 
 	Novice::ScreenPrintf(10, 10, "Controls : WASD + SPACE");
 }

@@ -10,7 +10,6 @@ void GameScene::Initialize() {
 
 	controller_ = new Controller(); 
 	controller_->Initialize(camera_);
-
 }
 void GameScene::Update(char* keys, char* preKeys) {
 	controller_->Update(keys, preKeys);

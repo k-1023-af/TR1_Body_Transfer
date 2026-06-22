@@ -3,17 +3,16 @@
 
 using namespace KamataEngine;
 
-class Player : public Entity
+class Rocket : public Entity
 {
 public:
-	Player();
-	~Player() override;
-	void Initialize(Vector3 startPos = {100.0f, 100.0f, 0.0f}) override;
+	Rocket();
+	~Rocket() override;
+	void Initialize(Vector3 startPos) override;
 	void Update(char* keys) override;
 	void Draw(char* keys) override;
 
 private:
 	float gravity_;
-	float jumpHeight_;
+	float acceleration_;
 };
-
