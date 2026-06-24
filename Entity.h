@@ -10,13 +10,15 @@ public:
 	virtual ~Entity() = default;
 
 	virtual void Initialize(Vector3 startPos = { 0,0,0 });
-	virtual void Update(char* keys) = 0;
-	virtual void Draw(char* keys) = 0;
+	virtual void Update(char* keys, char* preKeys) = 0;
+	virtual void Draw() = 0;
 
 	Vector3 GetTransform() const { return transform_.translate_; }
-	Vector3 GetPosition() const { return transform_.translate_; }
+	Vector2 GetVelocity() const { return velocity_; }
 
 	void DrawControls(char* keys) const;
+
+	float DistanceTo(const Entity* other) const;
 
 protected:
 	struct Transform {

@@ -4,22 +4,26 @@ Bird::Bird() {}
 Bird::~Bird() {}
 
 void Bird::Initialize(Vector3 startPos) {
-	Entity::Initialize(startPos);
-	speed_ = 3.5f;
+	//Entity::Initialize(startPos);
+	transform_.translate_ = startPos;
+
+	width_ = 32.0f;
+	height_ = 32.0f;
+	acceleration_ = 16.0f;
+	gravity_ = 1.8f;
+
+	birdHandles_[0] = Novice::LoadTexture("./NoviceResources/Bird0.png");
+	birdHandles_[1] = Novice::LoadTexture("./NoviceResources/Bird1.png");
+
+	screenPos_.x = transform_.translate_.x;
+	screenPos_.y = 720.0f - (transform_.translate_.y);
 }
 
-void Bird::Update(char* keys) {
-	(void)keys;
+void Bird::AIUpdate(){
+	velocity_ = { 0.0f, 0.0f };
 
-	//velocity_ = { 0.0f, 0.0f };
-	//
-	//if (keys[DIK_W]) { velocity_.y += 1.0f; }
-	//if (keys[DIK_S]) { velocity_.y -= 1.0f; }
-	//if (keys[DIK_A]) { velocity_.x -= 1.0f; }
-	//if (keys[DIK_D]) { velocity_.x += 1.0f; }
-	//
-	//velocity_.x = (rand() % 3 - 1) * speed_;
-	//velocity_.y = (rand() % 3 - 1) * speed_;
+	velocity_.x = (rand() % 5 - 2.0f);
+	velocity_.y -= gravity_;
 
 	float length = sqrtf(powf(velocity_.x, 2) + powf(velocity_.y, 2));
 	if (length != 0) {
@@ -29,29 +33,50 @@ void Bird::Update(char* keys) {
 		transform_.translate_.x += velocity_.x;
 		transform_.translate_.y += velocity_.y;
 	}
+
 	//Boundary check
 	transform_.translate_.x = std::clamp(transform_.translate_.x, 50.0f, 1200.0f);
-	transform_.translate_.y = std::clamp(transform_.translate_.y, 50.0f, 650.0f);
+	transform_.translate_.y = std::clamp(transform_.translate_.y, 128.0f + height_, 650.0f);
 
+	// Convert world position to screen position
 	screenPos_.x = transform_.translate_.x;
-	screenPos_.y = 720 - transform_.translate_.y;
+	screenPos_.y = 720.0f - (transform_.translate_.y);
 }
 
-void Bird::Draw(char* keys) {
-	(void)keys;
+void Bird::Update(char* keys, char*preKeys) {
+	velocity_ = { 0.0f, 0.0f };
+	
+	if (keys[DIK_SPACE]) {
+		if (keys[DIK_A]) { velocity_.x -= 3.0f; }
+		if (keys[DIK_D]) { velocity_.x += 3.0f; }
+	}	if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) { velocity_.y += acceleration_;  transform_.translate_.y += acceleration_; }
+	velocity_.y -= gravity_;
+	
+	float length = sqrtf(powf(velocity_.x, 2) + powf(velocity_.y, 2));
+	if (length != 0) {
+		velocity_.x = velocity_.x / length;
+		velocity_.y = velocity_.y / length;
+	
+		transform_.translate_.x += velocity_.x;
+		transform_.translate_.y += velocity_.y;
+	}
+	
+	//Boundary check
+	transform_.translate_.x = std::clamp(transform_.translate_.x, 50.0f, 1200.0f);
+	transform_.translate_.y = std::clamp(transform_.translate_.y, 128.0f + height_, 650.0f);
 
-	//DrawControls(keys);
-	Novice::DrawTriangle(
-		(int)screenPos_.x, (int)screenPos_.y - 15,
-		(int)screenPos_.x - 15, (int)screenPos_.y + 10,
-		(int)screenPos_.x + 15, (int)screenPos_.y + 10,
-		WHITE, kFillModeSolid
-	);
+	// Convert world position to screen position
+	screenPos_.x = transform_.translate_.x;
+	screenPos_.y = 720.0f - (transform_.translate_.y);
+}
 
-	Novice::DrawLine(
-		(int)screenPos_.x, (int)screenPos_.y,
-		(int)(screenPos_.x + velocity_.x * 25),
-		(int)(screenPos_.y + velocity_.y * 25),
-		0xAAAAAAFF
-	);
+void Bird::Draw() {
+	if (velocity_.y > 0) {
+		Novice::DrawSprite((int)screenPos_.x, (int)screenPos_.y, birdHandles_[1], 1.0f, 1.0f, 0.0f, WHITE);
+	}
+	else {
+		Novice::DrawSprite((int)screenPos_.x, (int)screenPos_.y, birdHandles_[0], 1.0f, 1.0f, 0.0f, WHITE);
+	}
+
+	Novice::DrawBox((int)screenPos_.x, (int)screenPos_.y, (int)width_, (int)height_, 0.0f, RED, kFillModeWireFrame);
 }

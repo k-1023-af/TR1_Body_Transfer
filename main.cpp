@@ -1,17 +1,22 @@
 #include <Novice.h>
 #include <Windows.h>
-//#include "KamataEngine.h"
+#include "KamataEngine.h"
+#include "Entity.h"
 #include "GameScene.h"
 #include "Player.h"
 #include "Controller.h"
 //#include "imgui.h"
 #include "2d/ImGuiManager.h"
 
-//using namespace KamataEngine;
+using namespace KamataEngine;
 
 //DirectXCommon* dxCommon = DirectXCommon::GetInstance();
 
 GameScene* gameScene = new GameScene();
+
+//Camera* camera_ = new Camera();
+
+//bool isControlled;
 
 const char kWindowTitle[] = "LE2C_21_ファルコン_エブラハム";
 
@@ -87,6 +92,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	delete gameScene;
 
 	gameScene = nullptr;
+
 
 	// ライブラリの終了
 	Novice::Finalize();

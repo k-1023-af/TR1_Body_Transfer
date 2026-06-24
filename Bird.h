@@ -6,10 +6,24 @@ public:
 	~Bird() override;
 
 	void Initialize(Vector3 startPos) override;
-	void Update(char* keys) override;
-	void Draw(char* keys) override;
+	void AIUpdate();
+	void Update(char* keys, char* preKeys) override;
+	void Draw() override;
 
 private:
-	float speed_ = 3.5f;
+	float acceleration_;
+	float gravity_;
+	float width_;
+	float height_;
+	//
+	//float speed_ = 4.0f;
+	////float flapStrength_ = 8.0f;
+	//
+	//int birdHandles_[2] = {
+	//	birdHandles_[0],
+	//	birdHandles_[1],
+	//};
+
+	int birdHandles_[2] = { 0, 0 };
 };
 

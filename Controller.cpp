@@ -24,7 +24,9 @@ void Controller::Initialize(KamataEngine::Camera* camera) {
     player_->Initialize({ 100.0f, 100.0f, 0.0f });
 
     rocket_ = new Rocket();
-    rocket_->Initialize(player_->GetPosition());
+    rocket_->Initialize({ 400.0f, 200.0f, 0.0f });
+    
+
 
     // Spawn several birds
     SpawnBird({ 300.0f, 200.0f, 0.0f });
@@ -41,102 +43,180 @@ void Controller::SpawnBird(Vector3 startPos) {
 }
 
 void Controller::Update(char* keys, char* preKeys) {
+
+    if (controlling != BIRD) {
+        for (size_t i = 0; i < birds_.size(); ++i) {
+            birds_[i]->AIUpdate();
+        }
+    }
+    if (controlling != ROCKET) {
+        rocket_->AIUpdate();
+    }
+
     switch (controlling) {
     case PLAYER:
-        player_->Update(keys);
+        player_->Update(keys, preKeys);
+        camera_->translation_ = player_->GetTransform();
 
-        // Camera follows player
-        {
-            Vector3 pos = player_->GetTransform();
-            camera_->translation_.x = pos.x;
-            camera_->translation_.y = pos.y;
-            camera_->translation_.z = pos.z;
-        }
+        if (keys[DIK_W] && !preKeys[DIK_W]) {
 
-        if (keys[DIK_T] && !preKeys[DIK_T]) {
-            controlling = BIRD;
+            if (player_->DistanceTo(rocket_) < 40.0f) {
+                controlling = ROCKET;
+                break;
+            }
+            // Check nearest Bird
+            for (size_t i = 0; i < birds_.size(); ++i) {
+                if (player_->DistanceTo(birds_[i]) < 80.0f) {
+                    controlling = BIRD;
+                    currentBirdIndex_ = static_cast<int>(i);
+                    break;
+                }
+            }
         }
         break;
 
     case BIRD:
-        // Update all birds
-        for (Bird* bird : birds_) {
-            bird->Update(keys);
-        }
-
-        // Camera follows current bird
         if (!birds_.empty()) {
             Bird* activeBird = birds_[currentBirdIndex_];
-            Vector3 pos = activeBird->GetTransform();
-            camera_->translation_.x = pos.x;
-            camera_->translation_.y = pos.y;
-            camera_->translation_.z = pos.z;
-        }
 
-        // Switch between birds
-        if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+            for (size_t i = 0; i < birds_.size(); ++i) {
+                bool isControlled = (i == currentBirdIndex_);
+
+                if (isControlled) {
+                    birds_[i]->Update(keys, preKeys);
+                }
+                else {
+                    birds_[i]->AIUpdate();
+                }
+            }
+
+            player_->SetTransform(activeBird->GetTransform());
+
+            Vector3 targetPos = activeBird->GetTransform();
+            camera_->translation_.x = camera_->translation_.x * 0.85f + targetPos.x;
+            camera_->translation_.y = camera_->translation_.y * 0.85f + targetPos.y;
+            camera_->translation_.z = targetPos.z;
+        }
+        if (keys[DIK_W] && !preKeys[DIK_W]) {
             if (!birds_.empty()) {
                 currentBirdIndex_ = (currentBirdIndex_ + 1) % birds_.size();
             }
         }
 
-        // Spawn new bird
-        if (keys[DIK_B] && !preKeys[DIK_B]) {
-            SpawnBird({
-                static_cast<float>(rand() % 1000 + 100),
-                static_cast<float>(rand() % 550 + 100),
-                0.0f
-                });
+        if (keys[DIK_S] && !preKeys[DIK_S]) {
+            controlling = PLAYER;
         }
+        ////spawn bird
+        //if (keys[DIK_B] && !preKeys[DIK_B]) {
+        //    SpawnBird({
+        //        static_cast<float>(rand() % 1000 + 100),
+        //        static_cast<float>(rand() % 550 + 100),
+        //        0.0f
+        //        });
+        //}
 
-        if (keys[DIK_T] && !preKeys[DIK_T]) {
-            controlling = ROCKET;
-        }
         break;
 
     case ROCKET:
-        rocket_->Update(keys);
+        rocket_->Update(keys, preKeys);
+        player_->SetTransform(rocket_->GetTransform());
 
-        {
-            Vector3 pos = player_->GetTransform();
-            camera_->translation_.x = pos.x;
-            camera_->translation_.y = pos.y;
-            camera_->translation_.z = pos.z;
-        }
+        camera_->translation_ = rocket_->GetTransform();
 
-        if (keys[DIK_T] && !preKeys[DIK_T]) {
+        if (keys[DIK_S] && !preKeys[DIK_S]) {
             controlling = PLAYER;
         }
         break;
     }
 }
 
-void Controller::Draw(char* keys) {
+void Controller::DrawAllEntities(/*char* keys, const Vector3& cameraPos*/) {
+
+    //player_->Draw();
+
+    for (Bird* bird : birds_) {
+        bird->Draw();
+    }
+    rocket_->Draw();
+
+    //switch (controlling) {
+    //case PLAYER:
+    //    player_->Draw(keys, cameraPos);
+    //    break;
+    //case BIRD:
+    //    for (Bird* bird : birds_) {
+    //        bird->Draw(keys, cameraPos);
+    //    }
+    //    break;
+    //case ROCKET:
+    //    rocket_->Draw(keys, cameraPos);
+    //    break;
+    //}
+}
+
+void Controller::Draw() {
     switch (controlling) {
     case PLAYER:
-        player_->Draw(keys);
-        Novice::ScreenPrintf(10, 130, "Controlling : PLAYER");
+        player_->Draw();
+
+        Novice::ScreenPrintf(10, 300, "Controlling : PLAYER");
+        Novice::ScreenPrintf(10, 180, "A = Left | D = Right");
+        Novice::ScreenPrintf(10, 210, "SPACE = Jump");
+        Novice::ScreenPrintf(10, 240, "W = Body Transfer");
+        //Novice::ScreenPrintf(10, 370, "SPACE = Jump");
         break;
 
     case BIRD:
-        // Draw all birds
-        for (Bird* bird : birds_) {
-            bird->Draw(keys);
-        }
-
-        Novice::ScreenPrintf(10, 100, "Total Birds: %d", (int)birds_.size());
-        Novice::ScreenPrintf(10, 130, "Controlling : BIRD %d / %d",
+        Novice::ScreenPrintf(10, 300, "Controlling : BIRD");
+        //Novice::ScreenPrintf(10, 250, "Total Birds: %d", (int)birds_.size());
+        Novice::ScreenPrintf(10, 330, "Controlling : BIRD %d / %d",
             currentBirdIndex_ + 1, (int)birds_.size());
 
-        Novice::ScreenPrintf(10, 160, "SPACE = Switch Bird");
-        Novice::ScreenPrintf(10, 180, "B = Spawn New Bird");
-        Novice::ScreenPrintf(10, 200, "T = Back to Player");
+        Novice::ScreenPrintf(10, 180, "SPACE = Flap Wings");
+        Novice::ScreenPrintf(10, 210, "W = Switch Bird");
+        Novice::ScreenPrintf(10, 240, "S = Back to Player");
+        //Novice::ScreenPrintf(10, 400, "B = Spawn New Bird");
         break;
 
     case ROCKET:
-        rocket_->Draw(keys);
-
-        Novice::ScreenPrintf(10, 130, "Controlling : ROCKET");
+        Novice::ScreenPrintf(10, 300, "Controlling : ROCKET");
+        Novice::ScreenPrintf(10, 180, "A = Left | D = Right");
+        Novice::ScreenPrintf(10, 210, "SPACE = Boost");
+        Novice::ScreenPrintf(10, 240, "S = Back to Player");
         break;
     }
 }
+
+Vector3 Controller::GetCameraPosition() const {
+    return camera_ ? camera_->translation_ : Vector3{ 0,0,0 };
+
+   // switch (controlling) {
+   // case PLAYER:
+   //     return player_ ? player_->GetTransform() : Vector3{ 0,0,0 };
+   // case BIRD:
+   //     if (!birds_.empty()) {
+   //         return birds_[currentBirdIndex_]->GetTransform();
+   //     }
+   //     break;
+   // case ROCKET:
+   //     return rocket_ ? rocket_->GetTransform() : Vector3{ 0,0,0 };
+   // }
+   // return { 0.0f, 0.0f };
+}
+
+Vector2 Controller::GetCurrentVelocity() const {
+    switch (controlling) {
+    case PLAYER:
+        return player_ ? player_->GetVelocity() : Vector2{ 0,0 };
+    case BIRD:
+        if (!birds_.empty()) {
+            return birds_[currentBirdIndex_]->GetVelocity();
+        }
+        break;
+    case ROCKET:
+        return rocket_ ? rocket_->GetVelocity() : Vector2{ 0,0 };
+    }
+    return { 0.0f, 0.0f };
+}
+
+

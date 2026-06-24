@@ -13,7 +13,11 @@ public:
 	~Controller();
 	void Initialize(KamataEngine::Camera* camera);
 	void Update(char* keys, char* preKeys);
-	void Draw(char* keys);
+	void DrawAllEntities(/*char* keys, const Vector3& cameraPos*/);
+	void Draw();
+
+	Vector3 GetCameraPosition() const;
+	Vector2 GetCurrentVelocity() const;
 
 private:
 	KamataEngine::Camera* camera_ = nullptr;
@@ -32,8 +36,8 @@ private:
 	};
 	Control controlling = PLAYER;
 
-	Vector3 cameraOffset_ = { 0.0f, 50.0f, 0.0f };
-
-
+	//Vector3 cameraOffset_ = { 0.0f, 50.0f, 0.0f };
+	//
+	//Vector2 cameraScroll_ = { 0.0f, 0.0f };
 };
 
