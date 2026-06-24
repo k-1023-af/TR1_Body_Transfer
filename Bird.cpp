@@ -28,7 +28,7 @@ void Bird::AIUpdate() {
 	}
 	velocity_.y -= gravity_;
 
-	UniversalUpdateChecks();
+	GlobalUpdateLogic();
 }
 
 void Bird::Update(char* keys, char*preKeys) {
@@ -40,7 +40,7 @@ void Bird::Update(char* keys, char*preKeys) {
 	}	if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) { velocity_.y += acceleration_;  transform_.translate_.y += acceleration_; }
 	velocity_.y -= gravity_;
 	
-	UniversalUpdateChecks();
+	GlobalUpdateLogic();
 }
 
 void Bird::Draw() {

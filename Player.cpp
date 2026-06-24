@@ -25,7 +25,7 @@ void Player::Update(char* keys, char* preKeys){
 	if ((transform_.translate_.y <= 128.0f + height_) && keys[DIK_SPACE] && !preKeys[DIK_SPACE]) { transform_.translate_.y += jumpHeight_; }
 	else { transform_.translate_.y -= gravity_; }
 
-	UniversalUpdateChecks();
+	GlobalUpdateLogic();
 }
 
 void Player::Draw(){

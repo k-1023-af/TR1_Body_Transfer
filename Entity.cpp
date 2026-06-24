@@ -22,7 +22,7 @@ float Entity::DistanceTo(const Entity* other) const {
 	return sqrtf(dx * dx + dy * dy + dz * dz);
 }
 
-void Entity::UniversalUpdateChecks() {
+void Entity::GlobalUpdateLogic() {
 	float length = sqrtf(powf(velocity_.x, 2) + powf(velocity_.y, 2));
 	if (length != 0) {
 		velocity_.x = velocity_.x / length;

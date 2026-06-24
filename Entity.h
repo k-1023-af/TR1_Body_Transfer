@@ -16,7 +16,7 @@ public:
 	Vector3 GetTransform() const { return transform_.translate_; }
 	Vector2 GetVelocity() const { return velocity_; }
 
-	void UniversalUpdateChecks();
+	void GlobalUpdateLogic();
 	void DrawControls(char* keys) const;
 
 	float DistanceTo(const Entity* other) const;

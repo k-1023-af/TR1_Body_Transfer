@@ -117,6 +117,7 @@ void Controller::Update(char* keys, char* preKeys) {
 
     case ROCKET:
         rocket_->Update(keys, preKeys);
+
         player_->SetTransform(rocket_->GetTransform());
 
         camera_->translation_ = rocket_->GetTransform();

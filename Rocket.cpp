@@ -25,7 +25,7 @@ void Rocket::AIUpdate(){
 	velocity_ = { 0.0f, 0.0f };
 	velocity_.y -= gravity_;
 
-	UniversalUpdateChecks();
+	GlobalUpdateLogic();
 }
 
 void Rocket::Update(char* keys, char* preKeys) {
@@ -38,7 +38,7 @@ void Rocket::Update(char* keys, char* preKeys) {
 	if (keys[DIK_SPACE]) { velocity_.y += acceleration_; }
 	else { velocity_.y -= gravity_; }
 
-	UniversalUpdateChecks();
+	GlobalUpdateLogic();
 }
 
 void Rocket::Draw() {
