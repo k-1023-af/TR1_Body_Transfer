@@ -12,5 +12,6 @@ public:
 
 private:
 	int birdHandles_[2] = { 0, 0 };
+	int kTimer = 10;
 };
 

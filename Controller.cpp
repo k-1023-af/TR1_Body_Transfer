@@ -64,7 +64,7 @@ void Controller::Update(char* keys, char* preKeys) {
             }
             // Check nearest Bird
             for (size_t i = 0; i < birds_.size(); ++i) {
-                if (player_->DistanceTo(birds_[i]) < 80.0f) {
+                if (player_->DistanceTo(birds_[i]) < 50.0f) {
                     controlling = BIRD;
                     currentBirdIndex_ = static_cast<int>(i);
                     break;
@@ -141,6 +141,15 @@ void Controller::Draw() {
         Novice::ScreenPrintf(10, 180, "A = Left | D = Right");
         Novice::ScreenPrintf(10, 210, "SPACE = Jump");
         Novice::ScreenPrintf(10, 240, "W = Body Transfer");
+
+        for (size_t i = 0; i < birds_.size(); ++i) {
+            if ((player_->DistanceTo(birds_[i]) < 50.0f) || (player_->DistanceTo(rocket_) < 40.0f)) {
+                Vector3 prompt;
+                prompt = player_->GetTransform();
+                Novice::DrawBox((int)prompt.x + 5, 720 - (int)prompt.y - 24, 24, 20, 0.0f, WHITE, kFillModeWireFrame);
+                Novice::ScreenPrintf((int)prompt.x + 12, 720 - (int)prompt.y - 22, "W");
+            }
+        }
         break;
 
     case BIRD:
@@ -152,6 +161,14 @@ void Controller::Draw() {
         Novice::ScreenPrintf(10, 210, "W = Switch Bird");
         Novice::ScreenPrintf(10, 240, "S = Back to Player");
         //Novice::ScreenPrintf(10, 400, "B = Spawn New Bird");
+
+        for (size_t i = 0; i < birds_.size(); ++i) {
+            Bird* activeBird = birds_[currentBirdIndex_];
+            Vector3 prompt;
+            prompt = activeBird->GetTransform();
+            //Novice::DrawBox((int)prompt.x + 5, 720 - (int)prompt.y - 24, 24, 20, 0.0f, WHITE, kFillModeWireFrame);
+            Novice::ScreenPrintf((int)prompt.x + 12, 720 - (int)prompt.y - 22, "%d", currentBirdIndex_ + 1);
+        }
         break;
 
     case ROCKET:
@@ -163,23 +180,23 @@ void Controller::Draw() {
     }
 }
 
-Vector3 Controller::GetCameraPosition() const {
-    return camera_ ? camera_->translation_ : Vector3{ 0,0,0 };
-}
-
-Vector2 Controller::GetCurrentVelocity() const {
-    switch (controlling) {
-    case PLAYER:
-        return player_ ? player_->GetVelocity() : Vector2{ 0,0 };
-    case BIRD:
-        if (!birds_.empty()) {
-            return birds_[currentBirdIndex_]->GetVelocity();
-        }
-        break;
-    case ROCKET:
-        return rocket_ ? rocket_->GetVelocity() : Vector2{ 0,0 };
-    }
-    return { 0.0f, 0.0f };
-}
+//Vector3 Controller::GetCameraPosition() const {
+//    return camera_ ? camera_->translation_ : Vector3{ 0,0,0 };
+//}
+//
+//Vector2 Controller::GetCurrentVelocity() const {
+//    switch (controlling) {
+//    case PLAYER:
+//        return player_ ? player_->GetVelocity() : Vector2{ 0,0 };
+//    case BIRD:
+//        if (!birds_.empty()) {
+//            return birds_[currentBirdIndex_]->GetVelocity();
+//        }
+//        break;
+//    case ROCKET:
+//        return rocket_ ? rocket_->GetVelocity() : Vector2{ 0,0 };
+//    }
+//    return { 0.0f, 0.0f };
+//}
 
 

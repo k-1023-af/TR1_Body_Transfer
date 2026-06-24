@@ -13,8 +13,8 @@ public:
 	void Update(char* keys, char* preKeys);
 	void Draw();
 
-	Vector3 GetCameraPosition() const;
-	Vector2 GetCurrentVelocity() const;
+	//Vector3 GetCameraPosition() const;
+	//Vector2 GetCurrentVelocity() const;
 
 private:
 	KamataEngine::Camera* camera_ = nullptr;

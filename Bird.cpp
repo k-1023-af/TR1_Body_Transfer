@@ -18,10 +18,14 @@ void Bird::Initialize(Vector3 startPos) {
 	screenPos_.y = 720.0f - (transform_.translate_.y);
 }
 
-void Bird::AIUpdate(){
+void Bird::AIUpdate() {
 	velocity_ = { 0.0f, 0.0f };
-
-	velocity_.x = (rand() % 5 - 2.0f);
+	
+	kTimer--;
+	if (kTimer <= 0){
+		velocity_.x = (rand() % 20 - 8.0f);
+		kTimer = 10;
+	}
 	velocity_.y -= gravity_;
 
 	UniversalUpdateChecks();

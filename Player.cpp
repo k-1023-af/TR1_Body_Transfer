@@ -29,7 +29,6 @@ void Player::Update(char* keys, char* preKeys){
 }
 
 void Player::Draw(){
-
 	Novice::DrawSprite((int)screenPos_.x, (int)screenPos_.y, playerHandle_, 1.0f, 1.0f, 0, WHITE);
 	Novice::DrawBox((int)screenPos_.x, (int)screenPos_.y, (int)width_, (int)height_, 0, RED, kFillModeWireFrame);
 }
