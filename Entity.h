@@ -16,6 +16,7 @@ public:
 	Vector3 GetTransform() const { return transform_.translate_; }
 	Vector2 GetVelocity() const { return velocity_; }
 
+	void UniversalUpdateChecks();
 	void DrawControls(char* keys) const;
 
 	float DistanceTo(const Entity* other) const;
@@ -29,6 +30,11 @@ protected:
 
 	Transform transform_;
 	Vector2 screenPos_;
-	Vector2 velocity_ = { 0.0f, 0.0f };
+	Vector2 velocity_;
+
+	float gravity_;
+	float acceleration_;
+	float width_;
+	float height_;
 };
 

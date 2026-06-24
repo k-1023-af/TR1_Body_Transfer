@@ -15,11 +15,7 @@ public:
 	void SetTransform(const Vector3& newPos);
 
 private:
-	float gravity_;
 	float jumpHeight_;
-	float width_;
-	float height_;
-
 	int playerHandle_;
 };
 

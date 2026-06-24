@@ -4,13 +4,12 @@ Bird::Bird() {}
 Bird::~Bird() {}
 
 void Bird::Initialize(Vector3 startPos) {
-	//Entity::Initialize(startPos);
 	transform_.translate_ = startPos;
 
 	width_ = 32.0f;
 	height_ = 32.0f;
 	acceleration_ = 16.0f;
-	gravity_ = 1.8f;
+	gravity_ = 4.8f;
 
 	birdHandles_[0] = Novice::LoadTexture("./NoviceResources/Bird0.png");
 	birdHandles_[1] = Novice::LoadTexture("./NoviceResources/Bird1.png");
@@ -25,22 +24,7 @@ void Bird::AIUpdate(){
 	velocity_.x = (rand() % 5 - 2.0f);
 	velocity_.y -= gravity_;
 
-	float length = sqrtf(powf(velocity_.x, 2) + powf(velocity_.y, 2));
-	if (length != 0) {
-		velocity_.x = velocity_.x / length;
-		velocity_.y = velocity_.y / length;
-
-		transform_.translate_.x += velocity_.x;
-		transform_.translate_.y += velocity_.y;
-	}
-
-	//Boundary check
-	transform_.translate_.x = std::clamp(transform_.translate_.x, 50.0f, 1200.0f);
-	transform_.translate_.y = std::clamp(transform_.translate_.y, 128.0f + height_, 650.0f);
-
-	// Convert world position to screen position
-	screenPos_.x = transform_.translate_.x;
-	screenPos_.y = 720.0f - (transform_.translate_.y);
+	UniversalUpdateChecks();
 }
 
 void Bird::Update(char* keys, char*preKeys) {
@@ -52,22 +36,7 @@ void Bird::Update(char* keys, char*preKeys) {
 	}	if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) { velocity_.y += acceleration_;  transform_.translate_.y += acceleration_; }
 	velocity_.y -= gravity_;
 	
-	float length = sqrtf(powf(velocity_.x, 2) + powf(velocity_.y, 2));
-	if (length != 0) {
-		velocity_.x = velocity_.x / length;
-		velocity_.y = velocity_.y / length;
-	
-		transform_.translate_.x += velocity_.x;
-		transform_.translate_.y += velocity_.y;
-	}
-	
-	//Boundary check
-	transform_.translate_.x = std::clamp(transform_.translate_.x, 50.0f, 1200.0f);
-	transform_.translate_.y = std::clamp(transform_.translate_.y, 128.0f + height_, 650.0f);
-
-	// Convert world position to screen position
-	screenPos_.x = transform_.translate_.x;
-	screenPos_.y = 720.0f - (transform_.translate_.y);
+	UniversalUpdateChecks();
 }
 
 void Bird::Draw() {
@@ -77,6 +46,5 @@ void Bird::Draw() {
 	else {
 		Novice::DrawSprite((int)screenPos_.x, (int)screenPos_.y, birdHandles_[0], 1.0f, 1.0f, 0.0f, WHITE);
 	}
-
 	Novice::DrawBox((int)screenPos_.x, (int)screenPos_.y, (int)width_, (int)height_, 0.0f, RED, kFillModeWireFrame);
 }

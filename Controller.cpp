@@ -25,8 +25,6 @@ void Controller::Initialize(KamataEngine::Camera* camera) {
 
     rocket_ = new Rocket();
     rocket_->Initialize({ 400.0f, 200.0f, 0.0f });
-    
-
 
     // Spawn several birds
     SpawnBird({ 300.0f, 200.0f, 0.0f });
@@ -130,45 +128,23 @@ void Controller::Update(char* keys, char* preKeys) {
     }
 }
 
-void Controller::DrawAllEntities(/*char* keys, const Vector3& cameraPos*/) {
-
-    //player_->Draw();
-
+void Controller::Draw() {
     for (Bird* bird : birds_) {
         bird->Draw();
     }
     rocket_->Draw();
 
-    //switch (controlling) {
-    //case PLAYER:
-    //    player_->Draw(keys, cameraPos);
-    //    break;
-    //case BIRD:
-    //    for (Bird* bird : birds_) {
-    //        bird->Draw(keys, cameraPos);
-    //    }
-    //    break;
-    //case ROCKET:
-    //    rocket_->Draw(keys, cameraPos);
-    //    break;
-    //}
-}
-
-void Controller::Draw() {
     switch (controlling) {
     case PLAYER:
         player_->Draw();
-
         Novice::ScreenPrintf(10, 300, "Controlling : PLAYER");
         Novice::ScreenPrintf(10, 180, "A = Left | D = Right");
         Novice::ScreenPrintf(10, 210, "SPACE = Jump");
         Novice::ScreenPrintf(10, 240, "W = Body Transfer");
-        //Novice::ScreenPrintf(10, 370, "SPACE = Jump");
         break;
 
     case BIRD:
         Novice::ScreenPrintf(10, 300, "Controlling : BIRD");
-        //Novice::ScreenPrintf(10, 250, "Total Birds: %d", (int)birds_.size());
         Novice::ScreenPrintf(10, 330, "Controlling : BIRD %d / %d",
             currentBirdIndex_ + 1, (int)birds_.size());
 
@@ -189,19 +165,6 @@ void Controller::Draw() {
 
 Vector3 Controller::GetCameraPosition() const {
     return camera_ ? camera_->translation_ : Vector3{ 0,0,0 };
-
-   // switch (controlling) {
-   // case PLAYER:
-   //     return player_ ? player_->GetTransform() : Vector3{ 0,0,0 };
-   // case BIRD:
-   //     if (!birds_.empty()) {
-   //         return birds_[currentBirdIndex_]->GetTransform();
-   //     }
-   //     break;
-   // case ROCKET:
-   //     return rocket_ ? rocket_->GetTransform() : Vector3{ 0,0,0 };
-   // }
-   // return { 0.0f, 0.0f };
 }
 
 Vector2 Controller::GetCurrentVelocity() const {

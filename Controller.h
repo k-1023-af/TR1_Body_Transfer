@@ -5,15 +5,12 @@
 #include "Bird.h"
 #include <vector>
 
-using namespace KamataEngine;
-
 class Controller {
 public:
 	Controller();
 	~Controller();
 	void Initialize(KamataEngine::Camera* camera);
 	void Update(char* keys, char* preKeys);
-	void DrawAllEntities(/*char* keys, const Vector3& cameraPos*/);
 	void Draw();
 
 	Vector3 GetCameraPosition() const;
@@ -35,9 +32,5 @@ private:
 		ROCKET
 	};
 	Control controlling = PLAYER;
-
-	//Vector3 cameraOffset_ = { 0.0f, 50.0f, 0.0f };
-	//
-	//Vector2 cameraScroll_ = { 0.0f, 0.0f };
 };
 

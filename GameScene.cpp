@@ -29,8 +29,6 @@ void GameScene::Draw(char* keys) {
     Novice::DrawSprite(1280 - (int)currentVelocity.x, 0, bgHandle_, 1, 1, 0, WHITE);
     Novice::DrawSprite(-1280 - (int)currentVelocity.x, 0, bgHandle_, 1, 1, 0, WHITE);
 
-    controller_->DrawAllEntities();
-
     entity_->DrawControls(keys);
 
     controller_->Draw();

@@ -3,7 +3,6 @@
 
 void Entity::Initialize(Vector3 startPos) {
 	transform_.translate_ = startPos;
-
 	transform_.scale_ = { 1.0f, 1.0f, 1.0f };
 	transform_.rotate_ = { 0.0f,0.0f,0.0f };
 	transform_.translate_ = { 0.0f, 0.0f, 0.0f };
@@ -23,6 +22,23 @@ float Entity::DistanceTo(const Entity* other) const {
 	return sqrtf(dx * dx + dy * dy + dz * dz);
 }
 
+void Entity::UniversalUpdateChecks() {
+	float length = sqrtf(powf(velocity_.x, 2) + powf(velocity_.y, 2));
+	if (length != 0) {
+		velocity_.x = velocity_.x / length;
+		velocity_.y = velocity_.y / length;
+
+		transform_.translate_.x += velocity_.x;
+		transform_.translate_.y += velocity_.y;
+	}
+	//Boundary check
+	transform_.translate_.x = std::clamp(transform_.translate_.x, 50.0f, 1200.0f);
+	transform_.translate_.y = std::clamp(transform_.translate_.y, 128.0f + height_, 650.0f);
+
+	screenPos_.x = transform_.translate_.x;
+	screenPos_.y = 720.0f - (transform_.translate_.y);
+}
+
 void Entity::DrawControls(char* keys) const {
 	Novice::DrawBox(60, 32, 40, 40, 0, WHITE, kFillModeWireFrame);
 	Novice::ScreenPrintf(78, 32, "W");
@@ -32,37 +48,12 @@ void Entity::DrawControls(char* keys) const {
 	Novice::ScreenPrintf(78, 82, "S");
 	Novice::DrawBox(110, 80, 40, 40, 0, WHITE, kFillModeWireFrame);
 	Novice::ScreenPrintf(128, 82, "D");
-
-	//Novice::DrawBox(180, 30, 40, 40, 0, WHITE, kFillModeWireFrame);
-	//Novice::ScreenPrintf(196, 32, "T");
-	//Novice::DrawBox(180, 80, 40, 40, 0, WHITE, kFillModeWireFrame);
-	//Novice::ScreenPrintf(196, 82, "B");
-
-
 	Novice::DrawBox(10, 130, 140, 30, 0, WHITE, kFillModeWireFrame);
 	Novice::ScreenPrintf(48, 132, "SPACE");
 
-	if (keys[DIK_W]) {
-		Novice::DrawBox(60, 30, 40, 40, 0, WHITE, kFillModeSolid);
-	}
-	if (keys[DIK_A]) {
-		Novice::DrawBox(10, 80, 40, 40, 0, WHITE, kFillModeSolid);
-	}
-	if (keys[DIK_S]) {
-		Novice::DrawBox(60, 80, 40, 40, 0, WHITE, kFillModeSolid);
-	}
-	if (keys[DIK_D]) {
-		Novice::DrawBox(110, 80, 40, 40, 0, WHITE, kFillModeSolid);
-	}
-	if (keys[DIK_SPACE]) {
-		Novice::DrawBox(10, 130, 140, 30, 0, WHITE, kFillModeSolid);
-	}
-	//if (keys[DIK_T]) {
-	//	Novice::DrawBox(180, 30, 40, 40, 0, WHITE, kFillModeSolid);
-	//}
-	//if (keys[DIK_B]) {
-	//	Novice::DrawBox(180, 80, 40, 40, 0, WHITE, kFillModeSolid);
-	//}
-
-
+	if (keys[DIK_W]) { Novice::DrawBox(60, 30, 40, 40, 0, WHITE, kFillModeSolid); }
+	if (keys[DIK_A]) { Novice::DrawBox(10, 80, 40, 40, 0, WHITE, kFillModeSolid); }
+	if (keys[DIK_S]) { Novice::DrawBox(60, 80, 40, 40, 0, WHITE, kFillModeSolid); }
+	if (keys[DIK_D]) { Novice::DrawBox(110, 80, 40, 40, 0, WHITE, kFillModeSolid); }
+	if (keys[DIK_SPACE]) { Novice::DrawBox(10, 130, 140, 30, 0, WHITE, kFillModeSolid); }
 }

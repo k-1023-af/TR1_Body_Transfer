@@ -14,10 +14,6 @@ using namespace KamataEngine;
 
 GameScene* gameScene = new GameScene();
 
-//Camera* camera_ = new Camera();
-
-//bool isControlled;
-
 const char kWindowTitle[] = "LE2C_21_ファルコン_エブラハム";
 
 // Windowsアプリでのエントリーポイント(main関数)
@@ -45,9 +41,9 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		/// ↓更新処理ここから
 		///
 #ifdef USE_IMGUI
-//ImGuiManager* imguiManager = ImGuiManager::GetInstance();
-
-//imguiManager->Begin();
+	//ImGuiManager* imguiManager = ImGuiManager::GetInstance();
+	
+	//imguiManager->Begin();
 
 	gameScene->Update(keys, preKeys);
 
@@ -55,24 +51,24 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 		//imguiManager->End();
 #endif
-///
-/// ↑更新処理ここまで
-///
-
-///
-/// ↓描画処理ここから
-///
-//dxCommon->PreDraw();
+	///
+	/// ↑更新処理ここまで
+	///
+	
+	///
+	/// ↓描画処理ここから
+	///
+	//dxCommon->PreDraw();
 
 
 	gameScene->Draw(keys);
 
-/// 軸表示の描画
-
-//AxisIndicator::GetInstance()->Draw();
-
-/// ImGuiの描画
-//imguiManager->Draw();
+	/// 軸表示の描画
+	
+	//AxisIndicator::GetInstance()->Draw();
+	
+	/// ImGuiの描画
+	//imguiManager->Draw();
 
 
 		//dxCommon->PostDraw();
@@ -92,7 +88,6 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	delete gameScene;
 
 	gameScene = nullptr;
-
 
 	// ライブラリの終了
 	Novice::Finalize();
